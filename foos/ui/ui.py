@@ -337,7 +337,11 @@ class Gui():
                                 duration=config.md_ev_interval + 1, fade=0.5)
 
         self.bacon = pi3d.ImageSprite(load_icon("icons/bacon.png", fallback="icons/logo_fallback.png"), flat, w=150, h=150,
-                                      x= (-1920 / 2) + 75, y=(-1080 + logo_d[1]) / 2 + 40, z=50)
+                                      x= (-1920 / 2) + 75 + 70, y=(-1080 + logo_d[1]) / 2 + 60, z=50)
+
+        self.pig = pi3d.ImageSprite(load_icon("icons/pig.png", fallback="icons/logo_fallback.png"), flat, w=300, h=167,
+                                      x= (-1920 / 2) + 75 + 75 + 20, y=(-1080 + logo_d[1]) / 2 + 40, z=50)
+
 
         in_d = (512 * 0.75, 185 * 0.75)
         self.instructions = pi3d.ImageSprite(load_icon("icons/instructions.png"), flat, w=in_d[0], h=in_d[1],
@@ -519,6 +523,7 @@ class Gui():
                 self.logo.draw()
                 self.people.draw()
                 self.bacon.draw()
+                self.pig.draw()
                 self.yCounter.draw()
                 self.bCounter.draw()
                 if not self.overlay_mode:

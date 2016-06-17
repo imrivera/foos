@@ -20,7 +20,7 @@ class Plugin():
 
         self.timeout = 10.0 #TODO 75.0
         #self.backend_host = 'localhost'
-        self.backend_host = '10.0.35.96'
+        self.backend_host = '10.0.11.1'
         self.backend_port = 8642
         self.reset_exponential_backoff()
         self.mutex = Lock()
