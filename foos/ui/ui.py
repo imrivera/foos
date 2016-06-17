@@ -336,6 +336,9 @@ class Gui():
                                                  x=(1920 - logo_d[0]) / 2 - 40 - logo_d[0] - 20, y=(-1080 + logo_d[1]) / 2 + 40, z=50),
                                 duration=config.md_ev_interval + 1, fade=0.5)
 
+        self.bacon = pi3d.ImageSprite(load_icon("icons/bacon.png", fallback="icons/logo_fallback.png"), flat, w=150, h=150,
+                                      x= (-1920 / 2) + 75, y=(-1080 + logo_d[1]) / 2 + 40, z=50)
+
         in_d = (512 * 0.75, 185 * 0.75)
         self.instructions = pi3d.ImageSprite(load_icon("icons/instructions.png"), flat, w=in_d[0], h=in_d[1],
                                              x=(-1920 + in_d[0]) / 2 + 40, y=(-1080 + in_d[1]) / 2 + 40, z=50)
@@ -515,6 +518,7 @@ class Gui():
 
                 self.logo.draw()
                 self.people.draw()
+                self.bacon.draw()
                 self.yCounter.draw()
                 self.bCounter.draw()
                 if not self.overlay_mode:
@@ -531,6 +535,8 @@ class Gui():
                     for avatar in self.yPlayersAvatars:
                         if avatar:
                             avatar.draw()
+
+
 
                     #    self.avatars[name].draw()
 
