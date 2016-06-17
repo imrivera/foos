@@ -49,6 +49,14 @@ def load_texture(filename, i_format=None, mipmap=False, fallback=None):
         f = img(fallback)
     return pi3d.Texture(f, defer=False, free_after_load=True, i_format=i_format, mipmap=mipmap, filter=GL_LINEAR)
 
+def load_avatar(name, default_texture, shader):
+    f = img("avatars/" + name + ".jpg")
+    texture = default_texture
+    if os.path.exists(f):
+        texture = load_texture(f)
+
+    return Move(Avatar(texture, shader))
+
 
 def load_bg(filename):
     return load_texture(filename)
@@ -63,6 +71,17 @@ class GuiState():
         self.yScore = yScore
         self.bScore = bScore
         self.lastGoal = lastGoal
+
+
+class Avatar(Delegate):
+    texture = None
+
+    def __init__(self, texture, shader):
+        self.disk = pi3d.shape.Disk.Disk(radius=90, sides=24, rx=90)
+        self.texture = texture
+        self.disk.set_shader(shader)
+        self.disk.set_textures([texture])
+        super().__init__(self.disk)
 
 
 class Counter(Delegate):
@@ -303,6 +322,7 @@ class Gui():
 
     def __setup_sprites(self):
         flat = pi3d.Shader("uv_flat")
+        self.shader_uv_flat = flat
 
         bg = pi3d.Sprite(w=1920, h=1080, z=100)
         bg.set_shader(flat)
@@ -320,6 +340,15 @@ class Gui():
         self.instructions = pi3d.ImageSprite(load_icon("icons/instructions.png"), flat, w=in_d[0], h=in_d[1],
                                              x=(-1920 + in_d[0]) / 2 + 40, y=(-1080 + in_d[1]) / 2 + 40, z=50)
         self.instructions = LazyTrigger(Disappear(self.instructions, duration=5))
+
+        avatar_default_texture = load_texture("avatars/default.jpg")
+        preload_users = ['imartinez', 'jmperez', 'jbravo', 'adelcampo', 'dpaneda', 'jmpalacio', '@def1', '@def2', '@def3', '@def4']
+        self.avatars = {}
+        for user in preload_users:
+            self.avatars[user] = load_avatar(user, avatar_default_texture, flat)
+
+        self.bPlayersAvatars = [None, None]
+        self.yPlayersAvatars = [None, None]
 
         logger.info("Loading font")
         printable_cps = list(itertools.chain(range(ord(' '), ord('~')), range(161, 255), [ord("○"), ord("●"), ord("◌"), ord("◉"), ord('Ω')]))
@@ -415,6 +444,9 @@ class Gui():
         l = 20
         if len(players) == 0:
             players = ["", ""]
+        if len(players) == 1:
+            players.append("")
+
         if len(points) == 0:
             points = ["", ""]
 
@@ -424,6 +456,33 @@ class Gui():
         return "%s\n%s" % (p0, p1)
 
     def setPlayers(self, black, yellow, black_points, yellow_points):
+
+        logger.info("setPlayers")
+        logger.info("black " + str(black))
+        logger.info("yellow " + str(yellow))
+        self.bPlayersAvatars = [None, None]
+        self.yPlayersAvatars = [None, None]
+
+        if len(yellow) >= 1:
+            name = yellow[0] if yellow[0] in self.avatars else '@def1'
+            self.avatars[name].moveTo((-800, 200, 0), (1.0, 1.0, 1.0))
+            self.yPlayersAvatars[0] = self.avatars[name]
+
+        if len(yellow) >= 2:
+            name = yellow[1] if yellow[1] in self.avatars else '@def2'
+            self.avatars[name].moveTo((-800, -200, 0), (1.0, 1.0, 1.0))
+            self.yPlayersAvatars[1] = self.avatars[name]
+
+        if len(black) >= 1:
+            name = black[0] if black[0] in self.avatars else '@def3'
+            self.avatars[name].moveTo((800, 200, 0), (1.0, 1.0, 1.0))
+            self.bPlayersAvatars[0] = self.avatars[name]
+
+        if len(black) >= 2:
+            name = black[1] if black[1] in self.avatars else '@def4'
+            self.avatars[name].moveTo((800, -200, 0), (1.0, 1.0, 1.0))
+            self.bPlayersAvatars[1] = self.avatars[name]
+
         self.yPlayers.quick_change(self.getPlayers(yellow, points=yellow_points, left=True))
         self.bPlayers.quick_change(self.getPlayers(black, points=black_points, left=False))
 
@@ -464,6 +523,16 @@ class Gui():
                     self.game_mode_ui.draw()
                     self.yPlayers.draw()
                     self.bPlayers.draw()
+
+                    for avatar in self.bPlayersAvatars:
+                        if avatar:
+                            avatar.draw()
+
+                    for avatar in self.yPlayersAvatars:
+                        if avatar:
+                            avatar.draw()
+
+                    #    self.avatars[name].draw()
 
                     if self.draw_menu:
                         self.menu.draw()

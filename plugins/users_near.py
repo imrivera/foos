@@ -22,6 +22,14 @@ class Plugin():
                 'd' : { 'limit' : 100, 'beacon' : "D2:73:A4:46:55:29"}
         }
 
+        self.positions = { #TODO
+                'a' : { 'limit' : 100, 'beacon' : "a"},
+                'b' : { 'limit' : 100, 'beacon' : "b"},
+                'c' : { 'limit' : 100, 'beacon' : "c"},
+                'd' : { 'limit' : 100, 'beacon' : "d"}
+        }
+
+
         for position in self.positions:
             self.users_playing[position] = None
 
@@ -31,7 +39,7 @@ class Plugin():
             self.update_users_playing()
 
         if ev.name == 'people_start_playing':
-            self.game_ongoing = True
+            self.game_ongoing = False
 
         if ev.name == 'user_left':
             self.users_near.pop(ev.data, None)
@@ -70,5 +78,21 @@ class Plugin():
             self.users_playing[position] = player
 
         if notify:
-            self.bus.notify('set_players',{"yellow": [], "black": [], "auto": True}) #TODO 
+            logger.info(self.users_playing)
+            yellowPlayers = []
+            if self.users_playing['a']:
+                yellowPlayers.append(self.users_playing['a'])
+
+            if self.users_playing['b']:
+                yellowPlayers.append(self.users_playing['b'])
+
+            blackPlayers = []
+            if self.users_playing['c']:
+                blackPlayers.append(self.users_playing['c'])
+
+            if self.users_playing['d']:
+                blackPlayers.append(self.users_playing['d'])
+
+            self.bus.notify('set_players',{"yellow": yellowPlayers, "black": blackPlayers, "auto": True}) #TODO
+        #self.bus.notify('set_players',{"yellow": ["imartinez", "jmperez"], "black": [], "auto": True}) #TODO
 
