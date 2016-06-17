@@ -16,17 +16,17 @@ class Plugin():
         self.users_playing = {}
 
         self.positions = { #TODO
-                'a' : { 'limit' : 100, 'beacon' : "E9:A2:96:32:7D:A1"},
-                'b' : { 'limit' : 100, 'beacon' : "DA:DD:A6:DE:22:8F"},
-                'c' : { 'limit' : 100, 'beacon' : "DF:5A:57:36:FB:5B"},
-                'd' : { 'limit' : 100, 'beacon' : "D2:73:A4:46:55:29"}
+                'a' : { 'limit' : 70, 'beacon' : "E9:A2:96:32:7D:A1"},
+                'b' : { 'limit' : 70, 'beacon' : "DA:DD:A6:DE:22:8F"},
+                'c' : { 'limit' : 70, 'beacon' : "DF:5A:57:36:FB:5B"},
+                'd' : { 'limit' : 70, 'beacon' : "D2:73:A4:46:55:29"}
         }
 
         self.positions = { #TODO
-                'a' : { 'limit' : 100, 'beacon' : "a"},
-                'b' : { 'limit' : 100, 'beacon' : "b"},
-                'c' : { 'limit' : 100, 'beacon' : "c"},
-                'd' : { 'limit' : 100, 'beacon' : "d"}
+                'a' : { 'limit' : 70, 'beacon' : "a"},
+                'b' : { 'limit' : 70, 'beacon' : "b"},
+                'c' : { 'limit' : 70, 'beacon' : "c"},
+                'd' : { 'limit' : 70, 'beacon' : "d"}
         }
 
 
@@ -59,7 +59,7 @@ class Plugin():
 
             for beacon in beacons:
                 b = beacon['beacon']
-                dist = beacon['distance']
+                dist = beacon['rssi']
                 if not dist_to_nearest or dist_to_nearest > dist:
                     nearest_beacon = b
                     dist_to_nearest = dist
